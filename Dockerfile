@@ -7,7 +7,7 @@ LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DA
 LABEL maintainer="thelamer"
 
 # title
-ENV TITLE="Ubuntu MATE"
+ENV TITLE="Ubuntu MATE Torcs Server"
 
 # prevent Ubuntu's firefox stub from being installed
 COPY /root/etc/apt/preferences.d/firefox-no-snap /etc/apt/preferences.d/firefox-no-snap
@@ -27,11 +27,22 @@ RUN \
     mate-applets \
     mate-applet-brisk-menu \
     mate-terminal \
+    nala \
     pluma \
     ubuntu-mate-artwork \
     ubuntu-mate-default-settings \
     ubuntu-mate-desktop \
-    ubuntu-mate-icon-themes && \
+    ubuntu-mate-icon-themes
+
+# NEW
+RUN \
+  nala install --no-install-recommends -y \
+    iputils-ping \
+    net-tools \
+    python-is-python3 \
+    python3-full \
+    python3-pip \
+    ansible && \
   echo "**** mate tweaks ****" && \
   rm -f \
     /etc/xdg/autostart/mate-power-manager.desktop \
@@ -48,6 +59,11 @@ RUN \
 # add local files
 COPY /root /
 
+# NEW
+# RUN \ 
+  # /tmp/install/scripts/install_ansible.sh
+
 # ports and volumes
-EXPOSE 3000
+EXPOSE 3020
 VOLUME /config
+
