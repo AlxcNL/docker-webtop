@@ -1,14 +1,16 @@
-FROM ghcr.io/linuxserver/baseimage-kasmvnc:arm64v8-alpine319
+FROM ghcr.io/linuxserver/baseimage-kasmvnc:arm64v8-ubuntunoble
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
-ARG XFCE_VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="thelamer"
 
 # title
-ENV TITLE="Alpine XFCE"
+ENV TITLE="Ubuntu MATE Torcs Server ARM64"
+
+# prevent Ubuntu's firefox stub from being installed
+COPY /root/etc/apt/preferences.d/firefox-no-snap /etc/apt/preferences.d/firefox-no-snap
 
 RUN \
   echo "**** add icon ****" && \
@@ -16,30 +18,82 @@ RUN \
     /kclient/public/icon.png \
     https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/webtop-logo.png && \
   echo "**** install packages ****" && \
-  apk add --no-cache \
-    faenza-icon-theme \
-    faenza-icon-theme-xfce4-appfinder \
-    faenza-icon-theme-xfce4-panel \
+  add-apt-repository -y ppa:mozillateam/ppa && \
+  add-apt-repository ppa:ubuntu-toolchain-r/ppa -y && \
+  apt-get update && \
+  DEBIAN_FRONTEND=noninteractive \
+  apt-get install --no-install-recommends -y \
+    ayatana-indicator-application \
     firefox \
-    mousepad \
-    ristretto \
-    thunar \
-    util-linux-misc \
-    xfce4 \
-    xfce4-terminal && \
-  echo "**** cleanup ****" && \
+    mate-applets \
+    mate-applet-brisk-menu \
+    mate-terminal \
+    nala \
+    pluma \
+    ubuntu-mate-artwork \
+    ubuntu-mate-default-settings \
+    ubuntu-mate-desktop \
+    ubuntu-mate-icon-themes
+
+# NEW
+RUN \
+  nala install --no-install-recommends -y \
+    build-essential \
+    cmake \
+    gcc \
+    iputils-ping \
+    net-tools \
+    python-is-python3 \
+    python3-full \
+    python3-pip \
+    unzip \
+    zip
+
+# NEW
+RUN \
+  nala install --no-install-recommends -y \
+    libglib2.0-dev \
+    libglu1-mesa-dev \
+    libopenal-dev \
+    libopenal1 \
+    libpng-dev \
+    libxi-dev \
+    libxmu-dev \
+    libxrandr-dev \
+    libxrender-dev \
+    libxrender1 \
+    libopenal1 \
+    libpng-dev \
+    libxi-dev \
+    libxmu-dev \
+    libxrandr-dev \
+    libxrender-dev \
+    libxrender1 \ 
+    libxxf86vm-dev \
+    zlib1g-dev
+
+RUN \    
+  echo "**** mate tweaks ****" && \
   rm -f \
-    /etc/xdg/autostart/xfce4-power-manager.desktop \
-    /etc/xdg/autostart/xscreensaver.desktop \
-    /usr/share/xfce4/panel/plugins/power-manager-plugin.desktop && \
+    /etc/xdg/autostart/mate-power-manager.desktop \
+    /etc/xdg/autostart/mate-screensaver.desktop && \
+  echo "**** cleanup ****" && \
+  apt-get autoclean && \
   rm -rf \
     /config/.cache \
+    /config/.launchpadlib \
+    /var/lib/apt/lists/* \
+    /var/tmp/* \
     /tmp/*
 
 # add local files
 COPY /root /
 
+# NEW
+# RUN \
+#   chmod u+x /tmp/install/playbooks/playbook-*.yaml && \
+#   /tmp/install/playbooks/playbook-torcs.yaml
+
 # ports and volumes
 EXPOSE 3000
-
 VOLUME /config
