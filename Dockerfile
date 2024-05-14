@@ -3,9 +3,13 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 # set version label
 ARG BUILD_DATE
 ARG VERSION
+ARG USER_UID=1000
+
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 LABEL maintainer="AlxcNL"
-ARG USER_UID=1000
+
+ENV CUSTOM_PORT=3000
+ENV CUSTOM_HTTPS_PORT=3021
 
 # title
 ENV TITLE="Ubuntu MATE Torcs Server"
@@ -99,8 +103,6 @@ RUN \
 # Add local files
 COPY /root /
 
-USER $USER_UID
-
 # Install Torcs
 RUN git clone https://github.com/fmirus/torcs-1.3.7.git /tmp/torcs
 
@@ -111,7 +113,11 @@ RUN \
   sudo make install && \
   make datainstall
 
-# Configure ports and volumes
+# Configure Ports
+EXPOSE ${CUSTOM_PORT}
+EXPOSE ${CUSTOM_HTTPS_PORT}
+# Ports used for socket connection with Torcs Clients
 EXPOSE 3000-3010
-EXPOSE 3020
+
+# Volume to store Desktop Environment
 VOLUME /config
