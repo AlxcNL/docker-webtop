@@ -35,6 +35,7 @@ RUN \
     ubuntu-mate-desktop \
     ubuntu-mate-icon-themes
 
+
 # NEW
 RUN \
   nala install --no-install-recommends -y \
@@ -90,9 +91,9 @@ RUN \
 COPY /root /
 
 # NEW
-# RUN \
-#   chmod u+x /tmp/install/playbooks/playbook-*.yaml && \
-#   /tmp/install/playbooks/playbook-torcs.yaml
+RUN \
+  chmod u+x /tmp/install/playbooks/playbook-*.yaml && \
+  /tmp/install/playbooks/playbook-torcs.yaml
 
 # ports and volumes
 EXPOSE 3000

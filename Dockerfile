@@ -4,7 +4,8 @@ FROM ghcr.io/linuxserver/baseimage-kasmvnc:ubuntunoble
 ARG BUILD_DATE
 ARG VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="thelamer"
+LABEL maintainer="AlxcNL"
+ARG USER_UID=1000
 
 # title
 ENV TITLE="Ubuntu MATE Torcs Server"
@@ -35,18 +36,53 @@ RUN \
     ubuntu-mate-desktop \
     ubuntu-mate-icon-themes
 
-# NEW
+# Install packages
 RUN \
   nala install --no-install-recommends -y \
-    ansible \
     build-essential \
     cmake \
     gcc \
+    git \
     iputils-ping \
     net-tools \
     python-is-python3 \
     python3-full \
-    python3-pip && \
+    python3-pip \
+    unzip \
+    zip
+
+# Install libraries
+RUN \
+  nala install --no-install-recommends -y \
+    freeglut3-dev \
+    libalut-dev \
+    libegl1-mesa-dev \
+    libglib2.0-dev \
+    libglu1-mesa-dev \
+    libopenal1 \
+    libopenal-dev \
+    libpng-dev \
+    libxi-dev \
+    libxmu-dev \
+    libxrandr-dev \
+    libxrender-dev \
+    libxrender1 \
+    libopenal1 \
+    libplib-dev \
+    libpng-dev \
+    libvorbis-dev \
+    libxi-dev \
+    libxmu-dev \
+    libxrandr-dev \
+    libxrender-dev \
+    libxrender1 \ 
+    libxxf86vm-dev \
+    libgl1-mesa-dev \
+    vorbis-tools \
+    xautomation \
+    zlib1g-dev
+        
+RUN \    
   echo "**** mate tweaks ****" && \
   rm -f \
     /etc/xdg/autostart/mate-power-manager.desktop \
@@ -60,15 +96,22 @@ RUN \
     /var/tmp/* \
     /tmp/*
 
-# add local files
+# Add local files
 COPY /root /
 
-# NEW
+USER $USER_UID
+
+# Install Torcs
+RUN git clone https://github.com/fmirus/torcs-1.3.7.git /tmp/torcs
+
+WORKDIR /tmp/torcs
 RUN \
-  chmod u+x /tmp/install/playbooks/playbook-*.yaml && \
-  /tmp/install/playbooks/playbook-torcs.yaml
+  sudo ./configure && \
+  make && \
+  sudo make install && \
+  make datainstall
 
-
-# ports and volumes
+# Configure ports and volumes
+EXPOSE 3000-3010
 EXPOSE 3020
 VOLUME /config
