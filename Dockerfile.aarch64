@@ -48,6 +48,7 @@ RUN \
     gcc \
     git \
     iputils-ping \
+    nano \
     net-tools \
     python-is-python3 \
     python3-full \
