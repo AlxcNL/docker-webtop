@@ -1,2 +1,4 @@
 .jenkins-external
 Jenkinsfile
+*ubuntu*.sh
+config/

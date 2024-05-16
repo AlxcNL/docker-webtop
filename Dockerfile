@@ -54,6 +54,7 @@ RUN \
     python3-full \
     python3-pip \
     unzip \
+    wget \    
     zip
 
 # Install libraries
@@ -118,7 +119,7 @@ RUN \
 EXPOSE ${CUSTOM_PORT}
 EXPOSE ${CUSTOM_HTTPS_PORT}
 # Ports used for socket connection with Torcs Clients
-EXPOSE 3000-3010
+EXPOSE 3010-3010
 
 # Volume to store Desktop Environment
 VOLUME /config
