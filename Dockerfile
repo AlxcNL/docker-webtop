@@ -119,7 +119,7 @@ RUN \
 EXPOSE ${CUSTOM_PORT}
 EXPOSE ${CUSTOM_HTTPS_PORT}
 # Ports used for socket connection with Torcs Clients
-EXPOSE 3010-3010
+EXPOSE 3001-3010
 
 # Volume to store Desktop Environment
 VOLUME /config
