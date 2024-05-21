@@ -38,7 +38,7 @@ RUN \
     ubuntu-mate-artwork \
     ubuntu-mate-default-settings \
     ubuntu-mate-desktop \
-    ubuntu-mate-icon-themes
+    ubuntu-mate-icon-themes    
 
 # Install packages
 RUN \
@@ -54,6 +54,7 @@ RUN \
     python3-full \
     python3-pip \
     unzip \
+    wget \
     zip
 
 # Install libraries

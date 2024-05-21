@@ -54,6 +54,7 @@ RUN \
     python3-full \
     python3-pip \
     unzip \
+    wget \
     zip
 
 # Install libraries
