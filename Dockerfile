@@ -104,6 +104,7 @@ RUN \
 
 # Add local files
 COPY /root /
+COPY install /tmp/
 
 # Install Torcs
 RUN git clone https://github.com/fmirus/torcs-1.3.7.git /tmp/torcs
@@ -115,7 +116,10 @@ RUN \
   sudo make install && \
   make datainstall
 
-# Configure Ports
+# Install torcs-client
+RUN /tmp/install/install_torcs_client.sh
+
+  # Configure Ports
 EXPOSE ${CUSTOM_PORT}
 EXPOSE ${CUSTOM_HTTPS_PORT}
 # Ports used for socket connection with Torcs Clients
