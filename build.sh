@@ -5,24 +5,23 @@ repo="jaboo"
 image_name="torcs-server"
 version="0.2"
 arch=$(uname -m)
+action="load"
 
 if [[ -n $1 ]]; then
     action=$1
-else
-    action="load"
 fi
 
 function buildImage() {
-    printf "Build and %s image %s for %s\n" $action $image $arch;
+    tag="${version}-${arch}"
+    image="${repo}/${image_name}:${tag}"
 
-    if [[ "$arch" -eq "x86_64" ]]; then
-        tag="${version}-${arch}"
-        image="${repo}/${image_name}:${tag}"
-        cmd="docker buildx build --${action} --build-arg PLATFORM=amd64 -t $image -f Dockerfile ."
+    printf "Build and %s image %s for %s\n" $action $image $arch;
+    cmd="docker buildx build --no-cache --${action}"
+
+    if [[ $arch == "x86_64" ]]; then
+        cmd="${cmd} --build-arg PLATFORM=amd64 -t $image -f Dockerfile ."
     else
-        tag="${version}"
-        image="${repo}/${image_name}:${tag}"
-        cmd="docker buildx build --${action} --build-arg PLATFORM=arm64 -t $image -f Dockerfile.aarch64 ."
+        cmd="${cmd}  --build-arg PLATFORM=arm64 -t $image -f Dockerfile.aarch64 ."
     fi
 
     echo $cmd
@@ -32,7 +31,8 @@ function buildImage() {
 
 buildImage
 
-if [[ $action -eq "push" ]]; then
-    image="${repo}/${image_name}:latest"
-    buildImage
+if [[ $action == "push" ]]; then
+    version="latest"
+    buildImage    
 fi
+
