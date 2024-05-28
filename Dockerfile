@@ -117,7 +117,7 @@ RUN \
   make datainstall
 
 # Install torcs-client
-RUN /tmp/install/install_torcs_client.sh
+RUN /tmp/install_torcs_client.sh
 
   # Configure Ports
 EXPOSE ${CUSTOM_PORT}
