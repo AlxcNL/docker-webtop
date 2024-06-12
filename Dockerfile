@@ -104,7 +104,6 @@ RUN \
 
 # Add local files
 COPY /root /
-COPY install /tmp/
 
 # Install Torcs
 RUN git clone https://github.com/fmirus/torcs-1.3.7.git /tmp/torcs
@@ -117,6 +116,7 @@ RUN \
   make datainstall
 
 # Install torcs-client
+COPY install/install_torcs_client.sh /tmp
 RUN /tmp/install_torcs_client.sh
 
   # Configure Ports
