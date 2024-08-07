@@ -10,11 +10,12 @@ targetDir="/tmp/torcs"
 # wget "https://sourceforge.net/projects/cig/files/SCR%20Championship/Client%20C%2B%2B/2.0/${archive}" && \
 unzip $archive
 mkdir -p "/tmp/torcs/${package}" && \
-tar -v -xzf $archive --directory $targetDir && \
+#tar -v -xzf $archive --directory $targetDir && \
+mv $package "${targetDir}/"
 rm $archive
 
 (
-    cd "/tmp/torcs/${package}";
+    cd "${targetDir}/${package}";
     make -j4;
 )
 

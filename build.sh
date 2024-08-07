@@ -16,7 +16,7 @@ function buildImage() {
     image="${repo}/${image_name}:${tag}"
 
     printf "Build and %s image %s for %s\n" $action $image $arch;
-    cmd="docker buildx build --no-cache --${action}"
+    cmd="docker buildx build --${action}"
 
     if [[ $arch == "x86_64" ]]; then
         cmd="${cmd} --build-arg PLATFORM=amd64 -t $image -f Dockerfile ."
